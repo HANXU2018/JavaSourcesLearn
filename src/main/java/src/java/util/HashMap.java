@@ -1009,6 +1009,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         return (es = entrySet) == null ? (entrySet = new EntrySet()) : es;
     }
 
+//    Set 视图意思是 HashMap 中所有的键值对都被看作是一个 set 集合
     final class EntrySet extends AbstractSet<Map.Entry<K,V>> {
         public final int size()                 { return size; }
         public final void clear()               { HashMap.this.clear(); }
@@ -1035,16 +1036,29 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         public final Spliterator<Map.Entry<K,V>> spliterator() {
             return new EntrySpliterator<>(HashMap.this, 0, -1, 0, 0);
         }
+//         forEach 遍历HashMap的元素
+//        final 代表不可修改 在这个方法也没有返回值
+//        传进来的参数有 Consumer<? super Map.Entry<K,V>>  是一个 action
         public final void forEach(Consumer<? super Map.Entry<K,V>> action) {
+//            tab就是存储的底层哈希表
             Node<K,V>[] tab;
+//            action 如果是空的就没法遍历了
             if (action == null)
                 throw new NullPointerException();
+//            判断 这个 tab 是 合法的 size 大于零 tab 赋值 table 的引用 判断不为空
+//            生产环境这样写代码会被打死
             if (size > 0 && (tab = table) != null) {
+//                mc 是 记录 调整的次数
+//                The number of times this HashMap has been structurally modified
                 int mc = modCount;
+//                遍历整个 hash 表
                 for (int i = 0; i < tab.length; ++i) {
+//                    for 循环 遍历 tab[i]
+//                    从生产者 方 接收数据
                     for (Node<K,V> e = tab[i]; e != null; e = e.next)
                         action.accept(e);
                 }
+//                发生了 哈希表 结构的调整
                 if (modCount != mc)
                     throw new ConcurrentModificationException();
             }
