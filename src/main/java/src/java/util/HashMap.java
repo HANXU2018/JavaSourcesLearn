@@ -809,6 +809,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      *         (A <tt>null</tt> return can also indicate that the map
      *         previously associated <tt>null</tt> with <tt>key</tt>.)
      */
+//    删除调用 removeNode
     public V remove(Object key) {
         Node<K,V> e;
         return (e = removeNode(hash(key), key, null, false, true)) == null ?
@@ -825,21 +826,38 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @param movable if false do not move other nodes while removing
      * @return the node, or null if none
      */
-//
+// 删除元素的 hash 值 键key 值value 只删除 value 一样的值 matchValue 可不可以并行同时删除 movable
     final Node<K,V> removeNode(int hash, Object key, Object value,
                                boolean matchValue, boolean movable) {
+//        还是那几个 变量
+//        tab 哈希表
+//        p 是当前 node
+//        n 是哈希表代销
+//        index 当前位置
         Node<K,V>[] tab; Node<K,V> p; int n, index;
+//        过滤又赋值
+//
         if ((tab = table) != null && (n = tab.length) > 0 &&
             (p = tab[index = (n - 1) & hash]) != null) {
+//            node 找的 node
+//            e 下一个节点
+//            K key
+//            V value
+
+//            这一大块 都是 查找值的位置 返回 node
             Node<K,V> node = null, e; K k; V v;
+//            key 和 hash 相等 node 就是要找的
             if (p.hash == hash &&
                 ((k = p.key) == key || (key != null && key.equals(k))))
                 node = p;
             else if ((e = p.next) != null) {
+//                是不是 红黑树 红黑树调用自己的getTreeNode接口
                 if (p instanceof TreeNode)
                     node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
                 else {
+//                    不是红黑树 普通链表进行遍历
                     do {
+//                        判断 e 是不是 key 和 hash 都相等
                         if (e.hash == hash &&
                             ((k = e.key) == key ||
                              (key != null && key.equals(k)))) {
@@ -850,15 +868,20 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                     } while ((e = e.next) != null);
                 }
             }
+
+//            这回 node 应该 找到了 一个简单的过滤 值是不是相等或者 需不需要判断值
             if (node != null && (!matchValue || (v = node.value) == value ||
                                  (value != null && value.equals(v)))) {
+//                红黑树的操作是 额外的价格
                 if (node instanceof TreeNode)
                     ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
-                else if (node == p)
+                else if (node == p) // 普通删就直接进入下一个
                     tab[index] = node.next;
                 else
                     p.next = node.next;
-                ++modCount;
+//                he number of times this HashMap has been structurally modified
+                ++modCount;// 进行了 结构操作
+//                元素个数减一了
                 --size;
                 afterNodeRemoval(node);
                 return node;
