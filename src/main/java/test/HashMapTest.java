@@ -8,6 +8,7 @@ public class HashMapTest {
 
         hashMap.put("1","2");
         hashMap.put("3","4");
+        hashMap.get("1");
         System.out.println(hashMap.put("5","6"));
         System.out.println(hashMap.put("1","3"));
 

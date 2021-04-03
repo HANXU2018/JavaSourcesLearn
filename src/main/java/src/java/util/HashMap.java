@@ -817,7 +817,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * Implements Map.remove and related methods.
-     *
+     *  实现了 Map 的 remove 抽象方法
      * @param hash hash for key
      * @param key the key
      * @param value the value to match if matchValue, else ignored
@@ -825,6 +825,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @param movable if false do not move other nodes while removing
      * @return the node, or null if none
      */
+//
     final Node<K,V> removeNode(int hash, Object key, Object value,
                                boolean matchValue, boolean movable) {
         Node<K,V>[] tab; Node<K,V> p; int n, index;
