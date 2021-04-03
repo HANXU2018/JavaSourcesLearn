@@ -559,22 +559,35 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * Implements Map.get and related methods.
-     *
+     * 这是个 Map.get 的实现 方法
      * @param hash hash for key
      * @param key the key
      * @return the node, or null if none
      */
+//    final 写死了 无法更改 返回 Node 传入查找的 hash 值 和 key键
     final Node<K,V> getNode(int hash, Object key) {
+//        tab 还是 哈希表
+//        first 哈希表找的链表红黑树对应的 头结点
+//        e 代表当前节点
+//        k 代表当前的 key
         Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
+//        赋值 并过滤 哈希表 空的长度不够的 对应位置没存数据的 都直接 return null
         if ((tab = table) != null && (n = tab.length) > 0 &&
             (first = tab[(n - 1) & hash]) != null) {
+//            头结点就 找到了 hash相等值相等 或者 不空的 key 和当前节点 equals
             if (first.hash == hash && // always check first node
                 ((k = first.key) == key || (key != null && key.equals(k))))
                 return first;
+//            头结点不匹配 没找到就 就用 next 找
             if ((e = first.next) != null) {
+//                是不是红黑树 的
                 if (first instanceof TreeNode)
                     return ((TreeNode<K,V>)first).getTreeNode(hash, key);
+//                红黑树就直接 调用 红黑树内查找
+
+//                不为空或者没找到就do while 循环
                 do {
+//                    当前节点 找到了 hash相等值相等 或者 不空的 key 和当前节点 equals
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
                         return e;
