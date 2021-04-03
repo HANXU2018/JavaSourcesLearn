@@ -1120,10 +1120,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     public boolean remove(Object key, Object value) {
         return removeNode(hash(key), key, value, true, true) != null;
     }
-
+//   比 replace(K key, V value)  多一个 旧值
     @Override
     public boolean replace(K key, V oldValue, V newValue) {
+//                e 表示更换 的 node V 记录旧的 value
         Node<K,V> e; V v;
+//        拦截并赋值 判断旧值是否满足 更换条件
         if ((e = getNode(hash(key), key)) != null &&
             ((v = e.value) == oldValue || (v != null && v.equals(oldValue)))) {
             e.value = newValue;
@@ -1132,10 +1134,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         }
         return false;
     }
-
+//  更换 key 对应的 value
     @Override
     public V replace(K key, V value) {
+//        e 表示更换 的 node
         Node<K,V> e;
+//        找的到 就换
         if ((e = getNode(hash(key), key)) != null) {
             V oldValue = e.value;
             e.value = value;
