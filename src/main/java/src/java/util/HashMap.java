@@ -713,17 +713,19 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                     else if (e instanceof TreeNode)
                         ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
                     else { // preserve order
+                        // 扩容时拆成了 high  和 low 两个链表 用 head 存头结点
                         Node<K,V> loHead = null, loTail = null;
                         Node<K,V> hiHead = null, hiTail = null;
                         Node<K,V> next;
                         do {
                             next = e.next;
+                            // 判断 high 还是 low
                             if ((e.hash & oldCap) == 0) {
                                 if (loTail == null)
-                                    loHead = e;
+                                    loHead = e;// 初始头结点
                                 else
                                     loTail.next = e;
-                                loTail = e;
+                                loTail = e;// 所有节点都往 尾结点加
                             }
                             else {
                                 if (hiTail == null)
@@ -733,7 +735,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                                 hiTail = e;
                             }
                         } while ((e = next) != null);
-                        if (loTail != null) {
+                        if (loTail != null) {// low 链表不为空 判断 tail 就行
                             loTail.next = null;
                             newTab[j] = loHead;
                         }
