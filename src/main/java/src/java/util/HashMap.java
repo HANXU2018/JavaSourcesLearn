@@ -879,6 +879,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                     tab[index] = node.next;
                 else
                     p.next = node.next;
+//                P 代表上一个 节点 如果 node == p 代表就一个节点 else 就是 链表中的节点 删除 node 就 p 的下一个 跳过 node
 //                he number of times this HashMap has been structurally modified
                 ++modCount;// 进行了 结构操作
 //                元素个数减一了
