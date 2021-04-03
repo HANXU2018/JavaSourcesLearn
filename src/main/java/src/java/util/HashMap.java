@@ -1293,17 +1293,27 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         return value;
     }
 
+//    作用是对Map中的每个映射执行action指定的操作，
+//    其中BiConsumer是一个函数接口，
+//    里面有一个待实现方法void accept(T t, U u)
     @Override
     public void forEach(BiConsumer<? super K, ? super V> action) {
+//        哈希表底层 tab
         Node<K,V>[] tab;
+//        空的 action 过滤 抛异常
         if (action == null)
             throw new NullPointerException();
+//        过滤 tab 的合法性 顺便 赋个值 tab = table
         if (size > 0 && (tab = table) != null) {
+//            结构调整的次数哦 modCount
             int mc = modCount;
+//            遍历 tab
             for (int i = 0; i < tab.length; ++i) {
+//                遍历 哈希表上的 链表或 红黑树
                 for (Node<K,V> e = tab[i]; e != null; e = e.next)
                     action.accept(e.key, e.value);
             }
+//            遍历过程中 hashMao 结构发生了调整
             if (modCount != mc)
                 throw new ConcurrentModificationException();
         }
